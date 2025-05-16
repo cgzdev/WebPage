@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generación</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style_selection.css">
+</head>
+<body>
+
+  <header>
+    <h1 id="titulo-generacion">Generación 202X</h1>
+    <h2>Seleccione las fotos que desea</h2>
+  </header>
+
+ <div class="enviar-container">
+  <button id="enviarBtn">Enviar</button>
+</div>
+
+  <section class="galeria" id="galeria">
+    <!-- Imágenes generadas por JS -->
+  </section>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const generacion = params.get('gen');
+
+  if (!generacion) {
+    document.body.innerHTML = "<h1 style='color: red; font-family: Montserrat; margin-top: 100px;'>Error: No se especificó ninguna generación</h1>";
+    throw new Error("No se proporcionó el parámetro 'gen'");
+  }
+
+  document.getElementById('titulo-generacion').innerText = `Generación ${generacion}`;
+
+  const galeria = document.getElementById('galeria');
+  for (let i = 1; i <= 9; i++) {
+    const label = document.createElement('div');
+    label.className = 'foto-label';
+    label.innerHTML = `
+      <img src="fotos/${generacion}/foto${i}.jpg" alt="foto ${i}" data-foto="foto${i}.jpg">
+    `;
+    galeria.appendChild(label);
+  }
+
+  // Lógica de selección visual
+  document.querySelectorAll('.galeria img').forEach(img => {
+    img.addEventListener('click', () => {
+      img.classList.toggle('seleccionada');
+    });
+  });
+
+  document.getElementById('enviarBtn').addEventListener('click', () => {
+    const seleccionadas = Array.from(document.querySelectorAll('.galeria img.seleccionada'))
+      .map(img => img.dataset.foto);
+    console.log(`Fotos seleccionadas para la generación ${generacion}:`, seleccionadas);
+    alert('Fotos enviadas correctamente');
+  });
+</script>
+
+</body>
+</html>

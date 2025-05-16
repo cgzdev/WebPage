@@ -1,0 +1,100 @@
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  position: fixed;
+  top: 20px;
+  background-color: white;
+  padding: 20px 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  z-index: 100;
+}
+
+header h1 {
+  font-weight: 600;
+  color: #b41a2c;
+  margin: 0;
+  font-size: 2rem;
+}
+
+header h2 {
+  font-weight: 300;
+  color: #333;
+  margin: 5px 0 0 0;
+  font-size: 1.2rem;
+}
+
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+  padding: 85px;
+  width: 90%;
+  max-width: 1000px;
+}
+
+.foto-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.foto-label img {
+  width: 200px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.foto-label img.seleccionada {
+  transform: scale(0.95);
+  box-shadow: 0 0 12px 5px #9b6363;
+}
+
+.enviar-container {
+  margin-top: 20px;
+  text-align: center;
+  position: sticky;
+  top: 130px;
+  z-index: 98;
+  padding: 10px 0;
+}
+
+.enviar-container button {
+  background-color: #b41a2c;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.enviar-container button:hover {
+  background-color: #b41a2c;
+  transform: scale(1.03);
+}
+
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+  header h2 {
+    font-size: 1rem;
+  }
+}
