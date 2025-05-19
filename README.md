@@ -1,6 +1,6 @@
 # WebPage – Envío de fotos
 Este proyecto permite a los usuarios seleccionar fotos desde una galería web y, al hacer clic en un botón, genera automáticamente una carpeta con las fotos seleccionadas, para enviárselas por correo al usuario. 
-
+---
 Cómo clonar y arrancar el proyecto (Primera vez)
   1. Clonar el repositorio
       git clone https://github.com/cgzdev/WebPage.git
@@ -21,28 +21,18 @@ El servidor se ejecuta por defecto en http://localhost:3000 o 3001, dependiendo 
 En caso de no funcionar, instalar node.js desde un navegador web
 
 Estructura del proyecto
-
+```none
 WebPage/
 ├── server.js
-
 ├── package.json
-
 ├── public/
-
 │   ├── index.html
-
 │   ├── style.css
-
 │   ├── selector.html
-
 │   ├── style_selection.css
-
 │   └── main.js
-
 └── Images/
-
     ├── carpetas/
-    
     └── originales/
 
 
