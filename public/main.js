@@ -1,3 +1,4 @@
+//cruces
 const canvas = document.getElementById('swisscross');
 const ctx = canvas.getContext('2d');
 
