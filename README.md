@@ -24,15 +24,25 @@ Estructura del proyecto
 
 WebPage/
 ├── server.js
+
 ├── package.json
+
 ├── public/
+
 │   ├── index.html
+
 │   ├── style.css
+
 │   ├── selector.html
+
 │   ├── style_selection.css
+
 │   └── main.js
+
 └── Images/
+
     ├── carpetas/
+    
     └── originales/
 
 
