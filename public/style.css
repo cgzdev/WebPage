@@ -118,3 +118,14 @@ form button:hover {
   z-index: -1;
   pointer-events: none;
 }
+
+/* Estilo del contenedor del traductor */
+#google_translate_element {
+  font-family: 'Montserrat', sans-serif !important;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 10px;
+  padding: 10px;
+  margin-top: 10px;
+}
