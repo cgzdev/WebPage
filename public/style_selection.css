@@ -61,7 +61,7 @@ header h2 {
 
 .foto-label img.seleccionada {
   transform: scale(0.95);
-  box-shadow: 0 0 12px 5px #717171;
+  box-shadow: 0 0 12px 5px #908b9f;
 }
 
 @media (max-width: 600px) {

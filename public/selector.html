@@ -30,29 +30,30 @@
   document.getElementById('titulo-generacion').innerText = `Generación ${generacion}`;
 
   const galeria = document.getElementById('galeria');
-   fetch('/api/fotos')
-      .then(res => res.json())
-      .then(imagenes => {
-        imagenes.forEach((src, index) => {
-          const label = document.createElement('div');
-          label.className = 'foto-label';
-          label.innerHTML = `
-            <img src="${src}" alt="foto ${index + 1}" data-foto="${src}">
-            <span>foto ${index + 1}</span>
-          `;
-          galeria.appendChild(label);
-        });
+  fetch(`/api/fotos?gen=${generacion}`)
+  .then(res => res.json())
+  .then(imagenes => {
+    imagenes.forEach(({ thumb, full }, index) => {
+      const label = document.createElement('div');
+      label.className = 'foto-label';
+      label.innerHTML = `
+        <img src="${thumb}" alt="foto ${index + 1}" data-foto="${full}">
+        <span>foto ${index + 1}</span>
+      `;
+      galeria.appendChild(label);
+    });
 
-        document.querySelectorAll('.galeria img').forEach(img => {
-          img.addEventListener('click', () => {
-            img.classList.toggle('seleccionada');
-          });
-        });
-      })
-      .catch(err => {
-        galeria.innerHTML = '<p style="color:red">Error al cargar imágenes</p>';
-        console.error(err);
+    document.querySelectorAll('.galeria img').forEach(img => {
+      img.addEventListener('click', () => {
+        img.classList.toggle('seleccionada');
       });
+    });
+  })
+  .catch(err => {
+    galeria.innerHTML = '<p style="color:red">Error al cargar imágenes</p>';
+    console.error(err);
+  });
+
 
     function enviarSeleccion() {
       // Aquí podrías hacer una descarga o enviar al servidor
