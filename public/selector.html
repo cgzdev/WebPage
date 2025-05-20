@@ -11,13 +11,8 @@
   <header>
     <h1 id="titulo-generacion">Generación 202X</h1>
     <h2>Seleccione las fotos que desea</h2>
-    <div id="galeria"></div>
     <button onclick="enviarSeleccion()">Descargar selección</button>
   </header>
-
- <div class="enviar-container">
-  <button id="enviarBtn">Enviar</button>
-</div>
 
   <section class="galeria" id="galeria">
     <!-- Imágenes generadas por JS -->
@@ -35,28 +30,34 @@
   document.getElementById('titulo-generacion').innerText = `Generación ${generacion}`;
 
   const galeria = document.getElementById('galeria');
-  for (let i = 1; i <= 9; i++) {
-    const label = document.createElement('div');
-    label.className = 'foto-label';
-    label.innerHTML = `
-      <img src="fotos/${generacion}/foto${i}.jpg" alt="foto ${i}" data-foto="foto${i}.jpg">
-    `;
-    galeria.appendChild(label);
-  }
+   fetch('/api/fotos')
+      .then(res => res.json())
+      .then(imagenes => {
+        imagenes.forEach((src, index) => {
+          const label = document.createElement('div');
+          label.className = 'foto-label';
+          label.innerHTML = `
+            <img src="${src}" alt="foto ${index + 1}" data-foto="${src}">
+            <span>foto ${index + 1}</span>
+          `;
+          galeria.appendChild(label);
+        });
 
-  // Lógica de selección visual
-  document.querySelectorAll('.galeria img').forEach(img => {
-    img.addEventListener('click', () => {
-      img.classList.toggle('seleccionada');
-    });
-  });
+        document.querySelectorAll('.galeria img').forEach(img => {
+          img.addEventListener('click', () => {
+            img.classList.toggle('seleccionada');
+          });
+        });
+      })
+      .catch(err => {
+        galeria.innerHTML = '<p style="color:red">Error al cargar imágenes</p>';
+        console.error(err);
+      });
 
-  document.getElementById('enviarBtn').addEventListener('click', () => {
-    const seleccionadas = Array.from(document.querySelectorAll('.galeria img.seleccionada'))
-      .map(img => img.dataset.foto);
-    console.log(`Fotos seleccionadas para la generación ${generacion}:`, seleccionadas);
-    alert('Fotos enviadas correctamente');
-  });
+    function enviarSeleccion() {
+      // Aquí podrías hacer una descarga o enviar al servidor
+      alert('Funcionalidad de descarga aún no implementada.');
+    }
 </script>
 
 
