@@ -61,33 +61,7 @@ header h2 {
 
 .foto-label img.seleccionada {
   transform: scale(0.95);
-  box-shadow: 0 0 12px 5px #9b6363;
-}
-
-.enviar-container {
-  margin-top: 20px;
-  text-align: center;
-  position: sticky;
-  top: 130px;
-  z-index: 98;
-  padding: 10px 0;
-}
-
-.enviar-container button {
-  background-color: #b41a2c;
-  color: white;
-  padding: 15px 30px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  box-shadow: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.enviar-container button:hover {
-  background-color: #b41a2c;
-  transform: scale(1.03);
+  box-shadow: 0 0 12px 5px #717171;
 }
 
 @media (max-width: 600px) {
