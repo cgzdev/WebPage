@@ -866,6 +866,7 @@ app.listen(PORT, () => {
 });
 // Inicia el servidor en el puerto 3000
 ```
+```bash
 node_modules/   # Librerías externas, se reinstalan con npm install
 
 .obsidian/      # Configuración local de Obsidian (no necesaria en el repo)
@@ -875,6 +876,7 @@ Carpetas/       # Carpeta generada por el servidor (temporal)
 .env            # Variables de entorno (credenciales, configuraciones privadas)
 
 images/         # Imágenes grandes que pueden evitarse en el repo
+```
 
 A su vez el package-lock.json tiene todas las dependencias necesarias para poder correr el servidor.
 
