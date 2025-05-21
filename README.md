@@ -223,26 +223,26 @@ body {
   margin: 0;
   padding: 0;
 }
-<!-- 
+/*
 Establece la fuente base como Montserrat.
 El fondo es blanco.
 Elimina márgenes y rellenos por defecto del navegador.
--->
+*/
 
 .contenedor {
   max-width: 600px;
   margin: 0 auto;
   padding: 40px;
 }
-<!-- 
+/*
 Crea un contenedor centrado con ancho máximo de 600px.
 Aplica un relleno interno de 40px para evitar que el contenido se vea pegado a los bordes.
--->
+*/
 
 .header {
   text-align: center;
 }
-<!-- Centra horizontalmente todo el contenido dentro del encabezado. -->
+//Centra horizontalmente todo el contenido dentro del encabezado.
 
 .header-title {
   font-weight: 300;
@@ -250,30 +250,30 @@ Aplica un relleno interno de 40px para evitar que el contenido se vea pegado a l
   color: #e32236;
   margin-bottom: 10px;
 }
-<!-- 
+/*
 El título principal (Generaciones CSM) se muestra en rojo suizo (#e32236),
 con un peso de fuente ligero y tamaño grande.
--->
+*/
 
 h1 {
   font-weight: 300;
   font-size: 24px;
   margin-top: 0;
 }
-<!-- 
+/* 
 Títulos secundarios (como "Registro y envío de fotos") con peso ligero.
 Quita el margen superior para mejor alineación visual.
--->
+*/
 
 label {
   display: block;
   margin-top: 20px;
   font-weight: 200;
 }
-<!-- 
+/* 
 Cada etiqueta del formulario aparece en su propia línea.
 Se separan 20px del elemento anterior y tienen fuente muy ligera.
--->
+*/
 
 input {
   width: 100%;
@@ -282,11 +282,11 @@ input {
   font-weight: 100;
   font-family: 'Montserrat', sans-serif;
 }
-<!-- 
+/* 
 Los campos de entrada ocupan el 100% del contenedor.
 Tienen un relleno interno de 10px y margen superior para no quedar pegados a la etiqueta.
 Se usa fuente ultraligera y se asegura el uso de Montserrat.
--->
+*/
 
 button {
   margin-top: 20px;
@@ -299,31 +299,31 @@ button {
   font-weight: 400;
   border-radius: 8px;
 }
-<!-- 
+/* 
 Botón de envío estilizado con fondo rojo, texto blanco, bordes redondeados,
 tamaño de fuente adecuado y sin borde.
 Incluye cursor tipo "mano" al pasar el mouse.
--->
+*/
 
 .separador {
   margin: 30px 0;
   border: none;
   border-top: 2px solid #ccc;
 }
-<!-- 
+/* 
 Línea divisoria entre encabezado y contenido.
 Tiene 2px de grosor, color gris claro y espacio vertical amplio.
--->
+*/
 
 #google_translate_element {
   text-align: right;
   margin-top: -20px;
   margin-bottom: 10px;
 }
-<!-- 
+/* 
 Ubica el botón de traducción alineado a la derecha.
 Se usa margen negativo para acercarlo al encabezado y dar separación inferior.
--->
+*/
 
 canvas#swisscross {
   position: fixed;
@@ -332,10 +332,10 @@ canvas#swisscross {
   pointer-events: none;
   z-index: -1;
 }
-<!-- 
+/* 
 El canvas se posiciona fijo en el fondo de la pantalla.
 No interfiere con clics (pointer-events: none) y se coloca detrás de todo con z-index negativo.
--->
+*/
 ```
 
 # main.js
