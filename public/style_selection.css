@@ -60,7 +60,7 @@ header h2 {
 }
 
 .foto-label img.seleccionada {
-  transform: scale(0.95);
+  transform: scale(0.75);
   box-shadow: 0 0 12px 5px #908b9f;
 }
 

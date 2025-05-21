@@ -1,9 +1,15 @@
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
+
 process.on('uncaughtException', err => {
   console.error('Excepción no atrapada:', err);
 });
+
 process.on('unhandledRejection', reason => {
   console.error('Promesa no manejada:', reason);
 });
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
