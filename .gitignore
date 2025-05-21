@@ -1,2 +1,7 @@
 node_modules/
 .obsidian/
+
+Carpetas/
+.env
+
+images/

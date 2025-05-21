@@ -1,8 +1,8 @@
 process.on('uncaughtException', err => {
-  console.error('🔥 Excepción no atrapada:', err);
+  console.error('Excepción no atrapada:', err);
 });
 process.on('unhandledRejection', reason => {
-  console.error('🔥 Promesa no manejada:', reason);
+  console.error('Promesa no manejada:', reason);
 });
 const express = require('express');
 const fs = require('fs');
@@ -28,7 +28,7 @@ router.get('/api/fotos', async (req, res) => {
           const stats = fs.statSync(path.join(originalDir, file));
           return stats.size > 1000;
         } catch (err) {
-          console.warn(`⚠️ Archivo ilegible: ${file}`);
+          console.warn(`Archivo ilegible: ${file}`);
           return false;
         }
       });
@@ -51,7 +51,7 @@ router.get('/api/fotos', async (req, res) => {
         console.log(`Miniatura generada: ${file}`);
 
       } catch (err) {
-        console.error(`❌ Error con ${file}: ${err.message}`);
+        console.error(`Error con ${file}: ${err.message}`);
       }
     }
 
@@ -62,7 +62,7 @@ router.get('/api/fotos', async (req, res) => {
 
     res.json(imagenes);
   } catch (err) {
-    console.error('❌ Error general:', err.message);
+    console.error('Error general:', err.message);
     res.status(500).json({ error: 'Error interno al procesar imágenes' });
   }
 });
