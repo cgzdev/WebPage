@@ -1,7 +1,3 @@
-document.addEventListener("contextmenu", function (e) {
-  e.preventDefault();
-});
-
 process.on('uncaughtException', err => {
   console.error('Excepción no atrapada:', err);
 });
