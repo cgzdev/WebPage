@@ -433,12 +433,12 @@ initCrosses();
 animate();
 // Se inicializa todo y se arranca la animación
 ```
----
 Esos tres scripts nos ayudan a construir la página principal. Index.html, en la funcionalidad. Style.css en la estética y main.js en la generación procedural de las cruces.
 
 Para la parte de la selección de imágenes tenemos tres scripts principales. selector.html, style_selection.css dev-fotos.js y generate-thumbnails.js. Aparte también hay un par de carpetas dedicadas.
 
 Images, contiene dos carpetas, las de las fotos principales y las que se generan con el código (miniaturas), que tienen una resolución mas baja para mejor fluidez de la página
+
 ---
 
 # selector.html
@@ -867,11 +867,16 @@ app.listen(PORT, () => {
 // Inicia el servidor en el puerto 3000
 ```
 node_modules/   # Librerías externas, se reinstalan con npm install
+
 .obsidian/      # Configuración local de Obsidian (no necesaria en el repo)
+
 Carpetas/       # Carpeta generada por el servidor (temporal)
+
 .env            # Variables de entorno (credenciales, configuraciones privadas)
+
 images/         # Imágenes grandes que pueden evitarse en el repo
 
 A su vez el package-lock.json tiene todas las dependencias necesarias para poder correr el servidor.
+
 
 Autor: cgzdev
