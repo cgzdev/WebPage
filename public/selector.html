@@ -11,11 +11,10 @@
   <header>
     <h1 id="titulo-generacion">Generación 202X</h1>
     <h2>Seleccione las fotos que desea</h2>
-    <button onclick="enviarSeleccion()">Descargar selección</button>
+    <button id="descargar" class="boton-enviar">Enviar</button>
   </header>
 
   <section class="galeria" id="galeria">
-    <!-- Imágenes generadas por JS -->
   </section>
 
 <script>
@@ -55,10 +54,11 @@
   });
 
 
-    function enviarSeleccion() {
-      // Aquí podrías hacer una descarga o enviar al servidor
+    function descargar() {
       alert('Funcionalidad de descarga aún no implementada.');
     }
+    document.getElementById('descargar').addEventListener('click', descargar);
+
 </script>
 
 
