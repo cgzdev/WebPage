@@ -1,4 +1,4 @@
-//cruces
+// cruces
 const canvas = document.getElementById('swisscross');
 const ctx = canvas.getContext('2d');
 
@@ -13,7 +13,7 @@ function resizeCanvas() {
 function createCross() {
   const x = Math.random() * canvas.width;
   const y = canvas.height + Math.random() * 100;
-  const size = 5 + Math.random() * 20;
+  const size = 12 + Math.random() * 13;
   const speed = 0.3 + Math.random() * 0.7;
   return { x, y, size, speed };
 }
