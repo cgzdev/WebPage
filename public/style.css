@@ -62,6 +62,7 @@ form input, form select {
 
 form input::placeholder {
   color: rgba(0, 0, 0, 0.4);
+  font-size: 16px;
 }
 
 form button {
@@ -84,14 +85,13 @@ form button:hover {
 }
 
 .header {
-  width: 100%;
+  width: 105%;
   background-color: transparent;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 5px;
   box-sizing: border-box;
-  margin-bottom: 10px; 
+  margin-bottom: 5px; 
 }
 
 .header-title {
@@ -169,7 +169,7 @@ form button:hover {
   }
 
   form input, form select {
-    font-size: 14px;
+    font-size: 16px;
     padding: 10px;
   }
 
@@ -179,3 +179,9 @@ form button:hover {
   }
 }
 
+.logo-generaciones {
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto 5px auto;
+}
