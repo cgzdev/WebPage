@@ -9,7 +9,8 @@
 <body>
 
   <header>
-    <h1 id="titulo-generacion">Generación 202X</h1>
+    <h1 id="titulo"</h1>
+    <div id="galeria"></div>
     <h2>Seleccione las fotos que desea</h2>
     <button id="descargar" class="boton-enviar">Enviar</button>
   </header>
@@ -19,48 +20,67 @@
 
 <script>
   const params = new URLSearchParams(window.location.search);
-  const generacion = params.get('gen');
+  const gen = params.get("gen");
+  const grupo = params.get("grupo");
+  const email = params.get("email");
 
-  if (!generacion) {
-    document.body.innerHTML = "<h1 style='color: red; font-family: Montserrat; margin-top: 100px;'>Error: No se especificó ninguna generación</h1>";
-    throw new Error("No se proporcionó el parámetro 'gen'");
+  let carpeta = "";
+  let titulo = "";
+  let tipo = "";                // "generaciones" o "grupos"
+
+  if (gen) {
+    carpeta = gen;
+    tipo = "generaciones";
+    titulo = `Generación ${gen}`;
+  } else if (grupo) {
+    carpeta = grupo;
+    tipo = "grupos";
+   
+    const nombres = {
+      maestros: "Maestros",
+      administracion: "Administración",
+      mantenimiento: "Mantenimiento",
+      extraescolares: "Grupos Extraescolares"
+    };
+    titulo = `Grupo: ${nombres[grupo] || grupo}`;
+  } else {
+    document.body.innerHTML = "<h2 style='text-align:center'>No se especificó ni generación ni grupo.</h2>";
+    throw new Error("No hay parámetro válido.");
   }
 
-  document.getElementById('titulo-generacion').innerText = `Generación ${generacion}`;
+  document.getElementById("titulo").innerText = titulo;
+  const thumbPath = `Images/thumbnails/${carpeta}/`;
 
-  const galeria = document.getElementById('galeria');
-  fetch(`/api/fotos?gen=${generacion}`)
-  .then(res => res.json())
-  .then(imagenes => {
-    imagenes.forEach(({ thumb, full }, index) => {
-      const label = document.createElement('div');
-      label.className = 'foto-label';
-      label.innerHTML = `
-        <img src="${thumb}" alt="foto ${index + 1}" data-foto="${full}">
-        <span>foto ${index + 1}</span>
-      `;
-      galeria.appendChild(label);
-    });
+  fetch(thumbPath)
+    .then(res => {
+      if (!res.ok) throw new Error("No se pudo acceder a la carpeta de miniaturas.");
+      return res.text(); // esto requiere que el servidor permita listar contenido
+    })
+    .then(html => {
 
-    document.querySelectorAll('.galeria img').forEach(img => {
-      img.addEventListener('click', () => {
-        img.classList.toggle('seleccionada');
+    const matches = html.match(/href="([^"]+\.(jpg|jpeg|png|webp))"/gi);
+    const imagenes = matches ? matches.map(m => m.match(/"([^"]+)"/)[1]) : [];
+
+      if (imagenes.length === 0) {
+        document.getElementById("galeria").innerHTML = "<p>No hay imágenes disponibles.</p>";
+        return;
+      }
+
+      const galeria = document.getElementById("galeria");
+
+      imagenes.forEach(nombre => {
+        const img = document.createElement("img");
+        img.src = `${thumbPath}${nombre}`;
+        img.alt = nombre;
+        img.className = "foto";
+        galeria.appendChild(img);
       });
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById("galeria").innerHTML = "<p>Error al cargar las miniaturas.</p>";
     });
-  })
-  .catch(err => {
-    galeria.innerHTML = '<p style="color:red">Error al cargar imágenes</p>';
-    console.error(err);
-  });
-
-
-    function descargar() {
-      alert('Funcionalidad de descarga aún no implementada.');
-    }
-    document.getElementById('descargar').addEventListener('click', descargar);
-
 </script>
 
-
-</body>
+  </body>
 </html>

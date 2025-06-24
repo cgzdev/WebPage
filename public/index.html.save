@@ -22,51 +22,40 @@
     <form id="formulario">
       <label for="email">Ingresa tu e-mail:</label>
       <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
-      
-<label for="grupo" class="grupo-label">Seleccione un campo:</label>      
-<div class="grupo-glassbox"> 
-<div class="grupo-selector">
-  <input type="radio" name="grupo" id="radioGen" value="generacion" onchange="mostrarCampo()" hidden>
-  <label for="radioGen" class="grupo-tab">Generación</label>
+ 
+ <label for="grupoUnified">Selecciona grupo:</label>
+<select id="grupoUnified" name="grupo" required>
+  <option value="" disabled selected>Elige una opción</option>
+  <optgroup label="Generaciones">
+    <!-- Solo unos ejemplos, puedes generar más con JS -->
+    <option value="gen:1965">Generación 1965</option>
+    <option value="gen:1966">Generación 1966</option>
+    <option value="gen:2027">Generación 2027</option>
+    <option value="gen:2041">Generación 2041</option>
+  </optgroup>
+  <optgroup label="Grupos especiales">
+    <option value="grupo:maestros">Maestros</option>
+    <option value="grupo:administracion">Administración</option>
+    <option value="grupo:mantenimiento">Mantenimiento</option>
+    <option value="grupo:extraescolares">Grupos extraescolares</option>
+  </optgroup>
+</select>
+  
 
-  <input type="radio" name="grupo" id="radioGrupo" value="especial" onchange="mostrarCampo()" hidden>
-  <label for="radioGrupo" class="grupo-tab">Grupos especiales</label>
-</div>
-
-<div id="campoGeneracion" class="grupo-input oculto">
-  <label for="generacion">Generación</label>
-  <input type="number" id="generacion" name="generacion" min="1965" max="2041" placeholder="YYYY">
-</div>
-
-  <div id="campoGrupo" class="grupo-input oculto">
-    <select id="grupoSelect" name="grupoEspecial">
-      <option value="" disabled selected>Elige una opción</option>
-      <option value="maestros">Maestros</option>
-      <option value="administracion">Administración</option>
-      <option value="mantenimiento">Mantenimiento</option>
-      <option value="extraescolares">Grupos extraescolares</option>
-    	</select>
-	  </div>
-	</div>
-
-       <button type="submit" id="verBtn">Ver</button>
+    <button type="submit" id="verBtn">Ver</button>
     </form>
   </div>
 <script>
-    
-      function mostrarCampo() {
- 	const seleccion = document.querySelector('input[name="grupo"]:checked');
-  	const campoGen = document.getElementById('campoGeneracion');
-  	const campoGrupo = document.getElementById('campoGrupo');
+    function mostrarCampo() {
+      const seleccion = document.querySelector('input[name="grupo"]:checked');
+      const campoGen = document.getElementById('campoGeneracion');
+      const campoGrupo = document.getElementById('campoGrupo');
 
-  	campoGen.classList.toggle('show', seleccion && seleccion.value === 'generacion');
-  	campoGen.classList.toggle('oculto', !(seleccion && seleccion.value === 'generacion'));
-
-  	campoGrupo.classList.toggle('show', seleccion && seleccion.value === 'especial');
+   	campoGen.classList.toggle('oculto', !(seleccion && seleccion.value === 'generacion'));
   	campoGrupo.classList.toggle('oculto', !(seleccion && seleccion.value === 'especial'));
-      }
+    }
 
-      document.getElementById('formulario').addEventListener('submit', function(event) {
+    document.getElementById('formulario').addEventListener('submit', function(event) {
       event.preventDefault();
 
       const email = document.getElementById('email').value.trim();

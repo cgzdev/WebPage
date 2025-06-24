@@ -15,3 +15,5 @@ app.use(fotosDev);
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor accesible en http://pinakothek60aniv.csm.edu.mx/`);
 });
+
+app.use('/Images/zips', express.static(path.join(__dirname, 'Images', 'zips')));
