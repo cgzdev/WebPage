@@ -12,6 +12,9 @@ app.use(express.json());
 const fotosDev = require('./routes/dev-fotos');
 app.use(fotosDev);
 
+const paqueteRouter = require('./routes/paquete');
+app.use(paqueteRouter);
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor accesible en http://pinakothek60aniv.csm.edu.mx/`);
 });
