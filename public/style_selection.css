@@ -1,93 +1,171 @@
+/* Fondo general y tipografía */
 body {
-  margin: 0;
   font-family: 'Montserrat', sans-serif;
-  background-color: #f2f2f2;
+  font-weight: 200;
+  background: linear-gradient(135deg, #e0e0e0, #ffffff);
+  color: #333;
+  margin: 0;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 header {
-  position: fixed;
+  position: sticky;
   top: 20px;
-  background-color: white;
-  padding: 20px 40px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  margin: 20px auto;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(55px) saturate(180%);
+  -webkit-backdrop-filter: blur(45px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  padding: 25px 40px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
   text-align: center;
-  z-index: 100;
+  width: calc(100% - 40px); 
+  max-width: 700px;
+  transition: all 0.3s ease-in-out;
 }
+
 
 header h1 {
   font-weight: 600;
-  color: #b41a2c;
-  margin: 0;
+  color: #36282b;
   font-size: 2rem;
+  margin: 0;
+  text-shadow: 0 0 4px rgba(255,255,255,0.8);
 }
 
 header h2 {
   font-weight: 300;
   color: #333;
-  margin: 5px 0 0 0;
+  margin-top: 5px;
   font-size: 1.2rem;
+}
+
+header button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 18px;
+  background: rgba(209, 33, 33, 0.85);
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(180, 20, 20, 0.3);
+  transition: background 0.2s ease;
+}
+
+header button:hover {
+  background: rgba(220, 40, 40, 0.9);
 }
 
 .galeria {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 30px;
-  margin-top: 150px;
-  padding: 85px;
-  width: 90%;
-  max-width: 1000px;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 20px; 
+  padding: 20px;
+  width: 100%;
+  max-width: 700px;
+  box-sizing: border-box;
 }
 
+
+/* Contenedor de cada imagen + texto */
 .foto-label {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 15px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
+.foto-label:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Imagen normal */
 .foto-label img {
-  width: 200px;
-  height: 140px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Imagen seleccionada */
 .foto-label img.seleccionada {
-  transform: scale(0.75);
-  box-shadow: 0 0 12px 5px #908b9f;
+  transform: scale(0.8);
+  box-shadow: 0 0 14px 6px rgba(128, 119, 119, 0.5);
+  border: 2px solid #cfc1c0;
 }
 
-.boton-enviar {
-  background-color: #b30000;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  margin-bottom: 10px; 
-  margin-top: 20px;    
-}
-
-.boton-enviar:hover {
-  background-color: #990000;
+/* Texto bajo imagen */
+.foto-label span {
+  font-size: 0.95rem;
+  color: #444;
 }
 
 @media (max-width: 600px) {
-  header h1 {
-    font-size: 1.5rem;
+  html {
+    font-size: 18px;
   }
-  header h2 {
+
+  body {
     font-size: 1rem;
+  }
+
+  header {
+    padding: 22px 25px;
+    border-radius: 24px;
+    max-width: 95%;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  header h2 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-top: 5px;
+  }
+
+  header button {
+    font-size: 1.1rem;
+    padding: 14px 26px;
+    margin-top: 18px;
+    border-radius: 20px;
+  }
+
+  .galeria {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 10px;
+  }
+
+  .foto-label {
+    padding: 14px;
+  }
+
+  .foto-label span {
+    font-size: 1.1rem;
+    color: #444;
   }
 }

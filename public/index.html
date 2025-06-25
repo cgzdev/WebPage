@@ -6,67 +6,81 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 
 <body>
- <div class="form-wrapper">
- <div class="contenedor">
- <header class="header">
-    <div class="header-title">
-	<img src="/60logosuizo.png" alt="Logo Generaciones CSM" style="max-width: 200px; height: auto; margin-bottom: 10px;">
+  <div class="form-wrapper">
+    <div class="contenedor">
+      <header class="header">
+        <div class="header-title">
+          <img src="/60logosuizo.png" alt="Logo Generaciones CSM" style="max-width: 200px; height: auto; margin-bottom: 10px;">
+        </div>
+      </header>
+
+      <hr class="separador">
+      <h1 data-i18n="Registro y envío de fotos">Registro y envío de fotos</h1>
+
+      <form id="formulario">
+        <div style="text-align: center; margin-bottom: 15px;">
+          <select onchange="aplicarTraduccion(this.value)" style="padding: 6px 12px; border-radius: 12px; backdrop-filter: blur(10px); background: rgba(255,255,255,0.3); border: none; font-family: 'Montserrat', sans-serif;">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+          </select>
+        </div>
+
+        <label for="email" data-i18n="Ingresa tu e-mail:">Ingresa tu e-mail:</label>
+        <input type="email" id="email" name="email" data-placeholder="ejemplo@correo.com" placeholder="ejemplo@correo.com" required>
+
+        <label for="grupo" class="grupo-label" data-i18n="Seleccione un campo:">Seleccione un campo:</label>
+        <div class="grupo-glassbox">
+          <div class="grupo-selector">
+            <input type="radio" name="grupo" id="radioGen" value="generacion" onchange="mostrarCampo()" hidden>
+            <label for="radioGen" class="grupo-tab" data-i18n="Generación">Generación</label>
+
+            <input type="radio" name="grupo" id="radioGrupo" value="especial" onchange="mostrarCampo()" hidden>
+            <label for="radioGrupo" class="grupo-tab" data-i18n="Personal y extraordinarios">Personal y extraordinarios</label>
+          </div>
+
+          <div id="campoGeneracion" class="grupo-input oculto">
+            <label for="generacion" data-i18n="Generación">Generación</label>
+            <input type="number" id="generacion" name="generacion" min="1965" max="2041" data-placeholder="YYYY" placeholder="YYYY">
+          </div>
+
+          <div id="campoGrupo" class="grupo-input oculto">
+            <select id="grupoSelect" name="grupoEspecial">
+              <option value="" disabled selected data-i18n="Elige una opción">Elige una opción</option>
+              <option value="maestros" data-i18n="Maestros">Maestros</option>
+              <option value="administracion" data-i18n="Administración">Administración</option>
+              <option value="mantenimiento" data-i18n="Mantenimiento">Mantenimiento</option>
+              <option value="extraescolares" data-i18n="Grupos extraescolares">Grupos extraescolares</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="verBtn" data-i18n="Ver">Ver</button>
+      </form>
     </div>
-  </header>   
-  <hr class="separador">
-    <h1>Registro y envío de fotos</h1>
-    <form id="formulario">
-      <label for="email">Ingresa tu e-mail:</label>
-      <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
-      
-<label for="grupo" class="grupo-label">Seleccione un campo:</label>      
-<div class="grupo-glassbox"> 
-<div class="grupo-selector">
-  <input type="radio" name="grupo" id="radioGen" value="generacion" onchange="mostrarCampo()" hidden>
-  <label for="radioGen" class="grupo-tab">Generación</label>
-
-  <input type="radio" name="grupo" id="radioGrupo" value="especial" onchange="mostrarCampo()" hidden>
-  <label for="radioGrupo" class="grupo-tab">Grupos especiales</label>
-</div>
-
-<div id="campoGeneracion" class="grupo-input oculto">
-  <label for="generacion">Generación</label>
-  <input type="number" id="generacion" name="generacion" min="1965" max="2041" placeholder="YYYY">
-</div>
-
-  <div id="campoGrupo" class="grupo-input oculto">
-    <select id="grupoSelect" name="grupoEspecial">
-      <option value="" disabled selected>Elige una opción</option>
-      <option value="maestros">Maestros</option>
-      <option value="administracion">Administración</option>
-      <option value="mantenimiento">Mantenimiento</option>
-      <option value="extraescolares">Grupos extraescolares</option>
-    	</select>
-	  </div>
-	</div>
-
-       <button type="submit" id="verBtn">Ver</button>
-    </form>
   </div>
-<script>
-    
-      function mostrarCampo() {
- 	const seleccion = document.querySelector('input[name="grupo"]:checked');
-  	const campoGen = document.getElementById('campoGeneracion');
-  	const campoGrupo = document.getElementById('campoGrupo');
 
-  	campoGen.classList.toggle('show', seleccion && seleccion.value === 'generacion');
-  	campoGen.classList.toggle('oculto', !(seleccion && seleccion.value === 'generacion'));
+  <canvas id="swisscross"></canvas>
+  <script src="main.js"></script>
+  <script src="traduccion.js"></script>
+  <script>
+    function mostrarCampo() {
+      const seleccion = document.querySelector('input[name="grupo"]:checked');
+      const campoGen = document.getElementById('campoGeneracion');
+      const campoGrupo = document.getElementById('campoGrupo');
 
-  	campoGrupo.classList.toggle('show', seleccion && seleccion.value === 'especial');
-  	campoGrupo.classList.toggle('oculto', !(seleccion && seleccion.value === 'especial'));
-      }
+      campoGen.classList.toggle('show', seleccion && seleccion.value === 'generacion');
+      campoGen.classList.toggle('oculto', !(seleccion && seleccion.value === 'generacion'));
 
-      document.getElementById('formulario').addEventListener('submit', function(event) {
+      campoGrupo.classList.toggle('show', seleccion && seleccion.value === 'especial');
+      campoGrupo.classList.toggle('oculto', !(seleccion && seleccion.value === 'especial'));
+    }
+
+    document.getElementById('formulario').addEventListener('submit', function(event) {
       event.preventDefault();
 
       const email = document.getElementById('email').value.trim();
@@ -90,12 +104,9 @@
           alert('Selecciona un grupo especial válido.');
           return;
         }
-        window.open(`selector.html?grupo=${encodeURIComponent(grupoEspecial)}&email=${encodeURIComponent(email)}`, '_blank');
+       window.open(`selector.html?gen=${encodeURIComponent(grupoEspecial)}&email=${encodeURIComponent(email)}`, '_blank');
       }
     });
-
   </script>
-	<canvas id="swisscross"></canvas>
-  	<script src="main.js"></script>
 </body>
 </html>

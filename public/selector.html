@@ -1,86 +1,132 @@
 <!DOCTYPE html>
 <html lang="es">
+<!-- Documento HTML en español -->
+
 <head>
   <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generación</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style_selection.css">
-</head>
-<body>
+  <!-- Título que aparecerá en la pestaña del navegador -->
 
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&display=swap" rel="stylesheet">
+  <!-- Importa la fuente Montserrat en tres pesos distintos -->
+
+  <link rel="stylesheet" href="style_selection.css">
+  <!-- Estilo específico para esta página de selección -->
+</head>
+
+<body>
   <header>
-    <h1 id="titulo"</h1>
-    <div id="galeria"></div>
+    <h1 id="titulo-generacion">Generación 202X</h1>
+    <!-- Título que será remplazado dinámicamente por el valor real -->
+
     <h2>Seleccione las fotos que desea</h2>
-    <button id="descargar" class="boton-enviar">Enviar</button>
+    <!-- Subtítulo explicativo -->
+    <button onclick="seleccionarTodas()">Seleccionar todas</button>
+    <button onclick="enviarSeleccion()">Enviar</button>
+    <!-- Botón que más adelante permitirá descargar las fotos seleccionadas -->
   </header>
 
   <section class="galeria" id="galeria">
+    <!-- Las imágenes se insertarán aquí dinámicamente vía JavaScript -->
   </section>
-
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const gen = params.get("gen");
-  const grupo = params.get("grupo");
-  const email = params.get("email");
 
-  let carpeta = "";
-  let titulo = "";
-  let tipo = "";                // "generaciones" o "grupos"
+const params = new URLSearchParams(window.location.search);
+const email = params.get('email');
+const generacion = params.get('gen');
 
-  if (gen) {
-    carpeta = gen;
-    tipo = "generaciones";
-    titulo = `Generación ${gen}`;
-  } else if (grupo) {
-    carpeta = grupo;
-    tipo = "grupos";
-   
-    const nombres = {
-      maestros: "Maestros",
-      administracion: "Administración",
-      mantenimiento: "Mantenimiento",
-      extraescolares: "Grupos Extraescolares"
-    };
-    titulo = `Grupo: ${nombres[grupo] || grupo}`;
-  } else {
-    document.body.innerHTML = "<h2 style='text-align:center'>No se especificó ni generación ni grupo.</h2>";
-    throw new Error("No hay parámetro válido.");
+
+  if (!generacion) {
+    document.body.innerHTML = "<h1 style='color: red; font-family: Montserrat; margin-top: 100px;'>Error: No se especificó ninguna generación</h1>";
+    throw new Error("No se proporcionó el parámetro 'gen'");
   }
 
-  document.getElementById("titulo").innerText = titulo;
-  const thumbPath = `Images/thumbnails/${carpeta}/`;
+  // Mostrar "Generación" solo si es un número, de lo contrario mostrar el grupo
+  const titulo = isNaN(generacion) ? `Grupo: ${generacion}` : `Generación ${generacion}`;
+  document.getElementById('titulo-generacion').innerText = titulo;
 
-  fetch(thumbPath)
-    .then(res => {
-      if (!res.ok) throw new Error("No se pudo acceder a la carpeta de miniaturas.");
-      return res.text(); // esto requiere que el servidor permita listar contenido
-    })
-    .then(html => {
+  const galeria = document.getElementById('galeria');
+  fetch(`/api/fotos?gen=${generacion}`)
+    .then(res => res.json())
+    .then(imagenes => {
 
-    const matches = html.match(/href="([^"]+\.(jpg|jpeg|png|webp))"/gi);
-    const imagenes = matches ? matches.map(m => m.match(/"([^"]+)"/)[1]) : [];
+imagenes.forEach(({ thumb, full }) => {
+  
+  const nombreCompleto = full.split('/').pop();
+  const nombre = nombreCompleto.replace(/\.[^/.]+$/, ''); // elimina extensión
 
-      if (imagenes.length === 0) {
-        document.getElementById("galeria").innerHTML = "<p>No hay imágenes disponibles.</p>";
-        return;
-      }
+  const label = document.createElement('div');
+  label.className = 'foto-label';
+  label.innerHTML = `
+    <img src="${thumb}" alt="${nombre}" data-foto="${full}">
+    <span>${nombre}</span>
+  `;
+  galeria.appendChild(label);
+});
 
-      const galeria = document.getElementById("galeria");
 
-      imagenes.forEach(nombre => {
-        const img = document.createElement("img");
-        img.src = `${thumbPath}${nombre}`;
-        img.alt = nombre;
-        img.className = "foto";
-        galeria.appendChild(img);
+      document.querySelectorAll('.galeria img').forEach(img => {
+        img.addEventListener('click', () => {
+          img.classList.toggle('seleccionada');
+        });
       });
     })
     .catch(err => {
+      galeria.innerHTML = '<p style="color:red">Error al cargar imágenes</p>';
       console.error(err);
-      document.getElementById("galeria").innerHTML = "<p>Error al cargar las miniaturas.</p>";
     });
+
+  async function enviarSeleccion() {
+  if (!email) {
+    alert('No se proporcionó un correo');
+    return;
+  }
+
+  const seleccionadas = Array.from(document.querySelectorAll('img.seleccionada'))
+    .map(img => img.dataset.foto);
+
+  if (seleccionadas.length === 0) {
+    alert('Selecciona al menos una imagen antes de continuar.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/paquete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ correo: email, imagenes: seleccionadas })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert('Tu selección fue enviada al correo correctamente.');
+    } else {
+      console.error('Respuesta del servidor:', data);
+      alert(`Ocurrió un error: ${data.error}`);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error al enviar la selección. Intenta más tarde.');
+  }
+}
+
+
+function seleccionarTodas() {
+  const imagenes = document.querySelectorAll('.galeria img');
+  const todasSeleccionadas = Array.from(imagenes).every(img => img.classList.contains('seleccionada'));
+
+  imagenes.forEach(img => {
+    if (todasSeleccionadas) {
+      img.classList.remove('seleccionada'); // deselecciona
+    } else {
+      img.classList.add('seleccionada'); // selecciona
+    }
+  });
+}
+
+
 </script>
 
-  </body>
+</body>
 </html>
