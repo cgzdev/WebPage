@@ -1,41 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Documento HTML en español -->
-
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generación</title>
-  <!-- Título que aparecerá en la pestaña del navegador -->
-
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&display=swap" rel="stylesheet">
-  <!-- Importa la fuente Montserrat en tres pesos distintos -->
-
-  <link rel="stylesheet" href="style_selection.css">
-  <!-- Estilo específico para esta página de selección -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style_selection.css" />
 </head>
-
 <body>
   <header>
     <h1 id="titulo-generacion">Generación 202X</h1>
-    <!-- Título que será remplazado dinámicamente por el valor real -->
-
     <h2>Seleccione las fotos que desea</h2>
-    <!-- Subtítulo explicativo -->
     <button onclick="seleccionarTodas()">Seleccionar todas</button>
     <button onclick="enviarSeleccion()">Enviar</button>
-    <!-- Botón que más adelante permitirá descargar las fotos seleccionadas -->
   </header>
 
-  <section class="galeria" id="galeria">
-    <!-- Las imágenes se insertarán aquí dinámicamente vía JavaScript -->
-  </section>
+  <section class="galeria" id="galeria"></section>
+
 <script>
-
-const params = new URLSearchParams(window.location.search);
-const email = params.get('email');
-const generacion = params.get('gen');
-
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get("email");
+  const generacion = params.get("gen");
+  const ascii = email?.split("@")[0].split("").map(c => c.charCodeAt(0)).join("");
 
   if (!generacion) {
     document.body.innerHTML = "<h1 style='color: red; font-family: Montserrat; margin-top: 100px;'>Error: No se especificó ninguna generación</h1>";
@@ -44,89 +30,94 @@ const generacion = params.get('gen');
 
   // Mostrar "Generación" solo si es un número, de lo contrario mostrar el grupo
   const titulo = isNaN(generacion) ? `Grupo: ${generacion}` : `Generación ${generacion}`;
-  document.getElementById('titulo-generacion').innerText = titulo;
+  document.getElementById("titulo-generacion").innerText = titulo;
 
-  const galeria = document.getElementById('galeria');
+  const galeria = document.getElementById("galeria");
+
   fetch(`/api/fotos?gen=${generacion}`)
     .then(res => res.json())
     .then(imagenes => {
+      imagenes.forEach(({ thumb, full }) => {
+        const nombreCompleto = full.split("/").pop();
+        const nombre = nombreCompleto.replace(/\.[^/.]+$/, ""); // elimina extensión
 
-imagenes.forEach(({ thumb, full }) => {
-  
-  const nombreCompleto = full.split('/').pop();
-  const nombre = nombreCompleto.replace(/\.[^/.]+$/, ''); // elimina extensión
+        const label = document.createElement("div");
+        label.className = "foto-label";
+        label.innerHTML = `
+          <img src="${thumb}" alt="${nombre}" data-foto="${full}" data-nombre="${nombre}">
+          <span>${nombre}</span>
+        `;
+        galeria.appendChild(label);
+      });
 
-  const label = document.createElement('div');
-  label.className = 'foto-label';
-  label.innerHTML = `
-    <img src="${thumb}" alt="${nombre}" data-foto="${full}">
-    <span>${nombre}</span>
-  `;
-  galeria.appendChild(label);
-});
-
-
-      document.querySelectorAll('.galeria img').forEach(img => {
-        img.addEventListener('click', () => {
-          img.classList.toggle('seleccionada');
+      document.querySelectorAll(".galeria img").forEach(img => {
+        img.addEventListener("click", () => {
+          img.classList.toggle("seleccionada");
         });
       });
     })
     .catch(err => {
-      galeria.innerHTML = '<p style="color:red">Error al cargar imágenes</p>';
+      galeria.innerHTML = "<p style='color:red'>Error al cargar imágenes</p>";
       console.error(err);
     });
 
-  async function enviarSeleccion() {
-  if (!email) {
-    alert('No se proporcionó un correo');
-    return;
-  }
+  function seleccionarTodas() {
+    const imagenes = document.querySelectorAll(".galeria img");
+    const todasSeleccionadas = Array.from(imagenes).every(img => img.classList.contains("seleccionada"));
 
-  const seleccionadas = Array.from(document.querySelectorAll('img.seleccionada'))
-    .map(img => img.dataset.foto);
-
-  if (seleccionadas.length === 0) {
-    alert('Selecciona al menos una imagen antes de continuar.');
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/paquete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ correo: email, imagenes: seleccionadas })
+    imagenes.forEach(img => {
+      img.classList.toggle("seleccionada", !todasSeleccionadas);
     });
-
-    const data = await res.json();
-    if (res.ok) {
-      alert('Tu selección fue enviada al correo correctamente.');
-    } else {
-      console.error('Respuesta del servidor:', data);
-      alert(`Ocurrió un error: ${data.error}`);
-    }
-  } catch (err) {
-    console.error(err);
-    alert('Error al enviar la selección. Intenta más tarde.');
   }
-}
 
-
-function seleccionarTodas() {
-  const imagenes = document.querySelectorAll('.galeria img');
-  const todasSeleccionadas = Array.from(imagenes).every(img => img.classList.contains('seleccionada'));
-
-  imagenes.forEach(img => {
-    if (todasSeleccionadas) {
-      img.classList.remove('seleccionada'); // deselecciona
-    } else {
-      img.classList.add('seleccionada'); // selecciona
+  async function enviarSeleccion() {
+    if (!email) {
+      alert("No se proporcionó un correo");
+      return;
     }
-  });
-}
 
+    const seleccionadas = Array.from(document.querySelectorAll("img.seleccionada"))
+      .map(img => img.dataset.nombre);
 
+    if (seleccionadas.length === 0) {
+      alert("Selecciona al menos una imagen antes de continuar.");
+      return;
+    }
+
+    const stringSeleccion = seleccionadas.join(",");
+    
+    try {
+      const res = await fetch("/api/paquete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: email,
+          ascii,
+          imagenes: stringSeleccion
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Tu selección fue enviada al correo correctamente.");
+      } else {
+        console.error("Respuesta del servidor:", data);
+        alert(`Ocurrió un error: ${data.error}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al enviar la selección. Intenta más tarde.");
+    }
+
+    // Solo para depuración
+    console.log({
+      correo: email,
+      ascii,
+      imagenes: stringSeleccion
+    });
+  }
 </script>
 
 </body>
 </html>
+

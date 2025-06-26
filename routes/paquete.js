@@ -1,78 +1,63 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 const router = express.Router();
-const paquetesDir = path.join(__dirname, '..', 'Images', 'paquetes');
+const dbPath = path.join(__dirname, '../data/selecciones.json');
 
-//crea paquete y envía correo
+// Asegura que exista la carpeta /data
+if (!fs.existsSync(path.dirname(dbPath))) {
+  fs.mkdirSync(path.dirname(dbPath));
+}
+
+// Carga o inicia la base de datos
+let selecciones = {};
+if (fs.existsSync(dbPath)) {
+  selecciones = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+}
+
+// Endpoint principal
 router.post('/api/paquete', async (req, res) => {
-  const { correo, imagenes } = req.body;
+  // 🔍 LOG para depurar
+  console.log('POST /api/paquete body:', req.body);
 
-  if (!correo || !imagenes || !Array.isArray(imagenes) || imagenes.length === 0) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios' });
-  }
+  const { correo, ascii, imagenes } = req.body;
 
-  const paqueteID = `paquete_${crypto.randomBytes(4).toString('hex')}`;
-  const paquetePath = path.join(paquetesDir, `${paqueteID}.json`);
-  const downloadURL = `https://descarga.pinakothek60aniv.csm.edu.mx/?paquete=${paqueteID}`;
+  // Validación mejorada
+console.log("BODY recibido:", req.body);
+if (!correo?.trim() || !ascii?.trim() || !imagenes?.trim()) {
+  return res.status(400).json({ error: 'Faltan datos requeridos' });
+}
+
+
+ //Guardar en archivo
+  selecciones[ascii] = imagenes;
+  fs.writeFileSync(dbPath, JSON.stringify(selecciones, null, 2));
+
+  const link = `https://pinakothek60aniv.csm.edu.mx/${ascii}`;
 
   try {
-    fs.writeFileSync(paquetePath, JSON.stringify({ imagenes }), 'utf-8');
-
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
+      service: 'gmail',
       auth: {
-        user: 'fotos.generacion@csm.edu.mx',
-        pass: 'GaraStudio#2025'
+        user: 'pinakothek60aniv@gmail.com',
+        pass: 'kjto yjiw gpub xval'
       }
     });
 
-    const mailOptions = {
-      from: 'Pinakothek 60 Años <fotos.generacion@csm.edu.mx>',
+    await transporter.sendMail({
+      from: 'pinakothek60aniv@gmail.com',
       to: correo,
-      subject: 'Tu selección de fotos está lista',
-      html: `
-        <p>Hola,</p>
-        <p>Has seleccionado algunas fotos de la galería Pinakothek 60 Años.</p>
-        <p>Haz clic en el siguiente botón para descargarlas:</p>
-        <p><a href="${downloadURL}" style="display:inline-block;padding:10px 20px;background:#007BFF;color:white;text-decoration:none;border-radius:5px;">Descargar mis fotos</a></p>
-        <p>Este enlace expirará pronto. Gracias por participar.</p>
-      `
-    };
+      subject: 'Tu selección de fotos - Pinakothek60',
+      text: `Gracias por usar la Pinacoteca. Aquí está el enlace con tu selección:\n\n${link}`
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.log(`Correo enviado a ${correo} con paquete ${paqueteID}`);
-
-    res.json({ mensaje: 'Correo enviado con enlace de descarga' });
+    res.json({ success: true, link });
   } catch (err) {
-    console.error('Error al guardar paquete o enviar correo:', err);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('Error al enviar correo:', err);
+    res.status(500).json({ error: 'No se pudo enviar el correo' });
   }
-});
-
-// obtener paquete JSON
-router.get('/api/paquetes/:id', (req, res) => {
-  const archivo = path.join(paquetesDir, `${req.params.id}.json`);
-  if (!fs.existsSync(archivo)) {
-    return res.status(404).json({ error: 'Paquete no encontrado' });
-  }
-  const data = fs.readFileSync(archivo, 'utf-8');
-  res.json(JSON.parse(data));
-});
-
-// eliminar paquete
-router.delete('/api/paquetes/:id', (req, res) => {
-  const archivo = path.join(paquetesDir, `${req.params.id}.json`);
-  if (!fs.existsSync(archivo)) {
-    return res.status(404).json({ error: 'Paquete no encontrado' });
-  }
-  fs.unlinkSync(archivo);
-  res.json({ mensaje: 'Paquete eliminado correctamente' });
 });
 
 module.exports = router;
