@@ -34,6 +34,14 @@
 
   const galeria = document.getElementById("galeria");
 
+  // Show loading state
+  galeria.innerHTML = `
+    <div style="text-align: center; padding: 40px; color: #666;">
+      <h3>Cargando imágenes...</h3>
+      <p>Por favor espera mientras se cargan las imágenes de ${titulo}.</p>
+    </div>
+  `;
+
   fetch(`/api/fotos?gen=${generacion}`)
     .then(res => res.json())
     .then(imagenes => {
@@ -41,13 +49,77 @@
         const nombreCompleto = full.split("/").pop();
         const nombre = nombreCompleto.replace(/\.[^/.]+$/, ""); // elimina extensión
 
+        // Detectar tipo de grupo especial
+        const isAdministracion = generacion.toLowerCase() === 'administracion';
+        const isMaestros = generacion.toLowerCase() === 'maestros';
+        const isMantenimiento = generacion.toLowerCase() === 'mantenimiento';
+        const isExtraescolares = generacion.toLowerCase() === 'extraescolares';
+        const isEspecial = isAdministracion || isMaestros || isMantenimiento;
+
+        let displayGrupo = '', displayAnio = '', displayGen = '';
+        let labelHtml = '';
+
+        if (isEspecial) {
+          // Buscar año (4 dígitos)
+          const yearMatch = nombre.match(/(19|20)\d{2}/);
+          displayAnio = yearMatch ? yearMatch[0] : '';
+          let personal = '';
+          if (isAdministracion) personal = 'Administración';
+          if (isMaestros) personal = 'Maestros';
+          if (isMantenimiento) personal = 'Mantenimiento';
+          labelHtml = `
+            <div><b>Personal:</b> ${personal}</div>
+            <div><b>Año:</b> ${displayAnio}</div>
+          `;
+        } else if (isExtraescolares) {
+          // Buscar año y actividad
+          const yearMatch = nombre.match(/(19|20)\d{2}/);
+          displayAnio = yearMatch ? yearMatch[0] : '';
+          // Actividad: lo que queda antes del año
+          let actividad = nombre.replace(/^(\d{2}_)?/, '').replace(/(19|20)\d{2}.*/, '').replace(/_/g, ' ').trim();
+          labelHtml = `
+            <div><b>Actividad:</b> ${actividad}</div>
+            <div><b>Año:</b> ${displayAnio}</div>
+          `;
+        } else {
+          // Generaciones normales
+          const match = nombre.match(/^\d{2}_([A-Z0-9]+)_([0-9]{4})_G([0-9]{4})$/);
+          if (match) {
+            displayGrupo = match[1];
+            displayAnio = match[2];
+            displayGen = match[3];
+          }
+          function gradeFullName(code) {
+            if (code.startsWith('M')) return 'Maternal ' + code.slice(1);
+            if (code.startsWith('K')) return 'Kinder ' + code.slice(1);
+            if (code.startsWith('PP')) return 'Preprimaria ' + code.slice(2);
+            if (code.startsWith('P')) return 'Primaria ' + code.slice(1);
+            if (code.startsWith('S')) return 'Secundaria ' + code.slice(1);
+            if (code.startsWith('C')) return 'CCH ' + code.slice(1);
+            return code;
+          }
+          labelHtml = `
+            <div><b>Grupo:</b> ${gradeFullName(displayGrupo)}</div>
+            <div><b>Año:</b> ${displayAnio}</div>
+            <div><b>Generación:</b> ${displayGen}</div>
+          `;
+        }
+
         const label = document.createElement("div");
         label.className = "foto-label";
         label.innerHTML = `
-          <img src="${thumb}" alt="${nombre}" data-foto="${full}" data-nombre="${nombre}">
-          <span>${nombre}</span>
+          <img src="${thumb}" alt="${cleanPhotoName(nombre)}" data-foto="${full}" data-nombre="${nombre}">
+          <div style="font-size:0.95em; color:#444; text-align:center; margin-top:4px;">
+            ${labelHtml}
+          </div>
         `;
         galeria.appendChild(label);
+      });
+
+      // Clear loading message
+      // Remove all non-foto-label children
+      Array.from(galeria.children).forEach(child => {
+        if (!child.classList.contains('foto-label')) galeria.removeChild(child);
       });
 
       document.querySelectorAll(".galeria img").forEach(img => {
@@ -57,8 +129,15 @@
       });
     })
     .catch(err => {
-      galeria.innerHTML = "<p style='color:red'>Error al cargar imágenes</p>";
-      console.error(err);
+      console.error('Error al cargar imágenes:', err);
+      galeria.innerHTML = `
+        <div style=\"text-align: center; padding: 40px; color: #666;\">
+          <h3>Error al cargar las imágenes</h3>
+          <p>No se pudieron cargar las imágenes para ${titulo}.</p>
+          <p>Por favor, verifica que la generación o grupo sea correcto.</p>
+          <button onclick=\"if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/' }\" style=\"margin-top: 20px; padding: 10px 20px; background: #d12121; color: white; border: none; border-radius: 8px; cursor: pointer;\">Volver</button>
+        </div>
+      `;
     });
 
   function seleccionarTodas() {
@@ -115,6 +194,18 @@
       ascii,
       imagenes: stringSeleccion
     });
+  }
+
+  // Helper to clean up photo names for display
+  function cleanPhotoName(name) {
+    try {
+      let decoded = decodeURIComponent(name);
+      decoded = decoded.replace(/_/g, ' ');
+      decoded = decoded.replace(/\s+/g, ' ').trim();
+      return decoded;
+    } catch (e) {
+      return name.replace(/_/g, ' ');
+    }
   }
 </script>
 

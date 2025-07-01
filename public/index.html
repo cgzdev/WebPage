@@ -45,7 +45,7 @@
 
           <div id="campoGeneracion" class="grupo-input oculto">
             <label for="generacion" data-i18n="Generación">Generación</label>
-            <input type="number" id="generacion" name="generacion" min="1965" max="2041" data-placeholder="YYYY" placeholder="YYYY">
+            <input type="number" id="generacion" name="generacion" min="1974" max="2040" data-placeholder="YYYY" placeholder="YYYY">
           </div>
 
           <div id="campoGrupo" class="grupo-input oculto">
@@ -94,8 +94,8 @@
       }
 
       if (grupoSeleccionado.value === 'generacion') {
-        if (!generacion || generacion < 1965 || generacion > 2041) {
-          alert('Ingresa un año de generación válido entre 1965 y 2041.');
+        if (!generacion || generacion < 1974 || generacion > 2040) {
+          alert('Ingresa un año de generación válido entre 1974 y 2040.');
           return;
         }
         window.open(`selector.html?gen=${encodeURIComponent(generacion)}&email=${encodeURIComponent(email)}`, '_blank');
@@ -104,7 +104,7 @@
           alert('Selecciona un grupo especial válido.');
           return;
         }
-       window.open(`selector.html?gen=${encodeURIComponent(grupoEspecial)}&email=${encodeURIComponent(email)}`, '_blank');
+        window.open(`selector.html?gen=${encodeURIComponent(grupoEspecial)}&email=${encodeURIComponent(email)}`, '_blank');
       }
     });
   </script>

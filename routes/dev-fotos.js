@@ -19,8 +19,26 @@ router.get('/api/fotos', async (req, res) => {
     return res.status(400).json({ error: 'Falta el parámetro ?gen=' });
   }
 
-  const originalDir = path.join(__dirname, '..', 'images', gen);
-  const thumbDir = path.join(__dirname, '..', 'images', 'thumbnails', gen);
+  // Normalize directory name for case-insensitive matching
+  const normalizeDirName = (name) => {
+    const mappings = {
+      'maestros': 'maestros',
+      'administracion': 'administracion',
+      'mantenimiento': 'mantenimiento',
+      'extraescolares': 'extraescolares'
+    };
+    return mappings[name.toLowerCase()] || name;
+  };
+
+  const normalizedGen = normalizeDirName(gen);
+  const originalDir = path.join(__dirname, '..', 'images', normalizedGen);
+  const thumbDir = path.join(__dirname, '..', 'images', 'thumbnails', normalizedGen);
+  
+  // Use lowercase for URL paths
+  const urlGen = gen.toLowerCase();
+
+  console.log(`Requested gen: ${gen}, normalized: ${normalizedGen}`);
+  console.log(`Looking for directory: ${originalDir}`);
 
   try {
     const files = fs.readdirSync(originalDir)
@@ -58,14 +76,18 @@ router.get('/api/fotos', async (req, res) => {
     }
 
     const imagenes = files.map(file => ({
-      thumb: `/images/thumbnails/${gen}/${encodeURIComponent(file)}`,
-      full: `/images/${gen}/${encodeURIComponent(file)}`
+      thumb: `/images/thumbnails/${urlGen}/${encodeURIComponent(file)}`,
+      full: `/images/${urlGen}/${encodeURIComponent(file)}`
     }));
 
     res.json(imagenes);
   } catch (err) {
     console.error('Error general:', err.message);
-    res.status(500).json({ error: 'Error interno al procesar imágenes' });
+    if (err.code === 'ENOENT') {
+      res.status(404).json({ error: `No se encontraron imágenes para la generación ${gen}` });
+    } else {
+      res.status(500).json({ error: 'Error interno al procesar imágenes' });
+    }
   }
 });
 
