@@ -66,7 +66,7 @@ router.post('/api/paquete', async (req, res) => {
       from: process.env.EMAIL_USER || 'pinakothek60aniv@gmail.com',
       to: correo,
       subject: 'Tu selección de fotos - Pinakothek60',
-      text: `Durante seis décadas, hemos formado generaciones con espíritu crítico y pasión por el conocimiento.\nGracias por estar aquí, por revivir recuerdos, compartir sonrisas y, sobre todo, por impulsar juntos el próximo capítulo de nuestra historia.\n\nSu seleccion de fotos:\n${link}\n\n-Colegio Suizo de México`
+      text: `Durante seis décadas, hemos formado generaciones con espíritu crítico y pasión por el conocimiento.\nGracias por estar aquí, por revivir recuerdos, compartir sonrisas y, sobre todo, por impulsar juntos el próximo capítulo de nuestra historia.\n\nSu seleccion de fotos:\n${link}\n\n-Colegio Suizo de México \n Desarrollado por: Arturo Robles, Carlos Galindo, Federico Aguilar, Yan Alvarez`
     });
 
     res.json({ success: true, link });

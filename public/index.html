@@ -45,7 +45,7 @@
 
           <div id="campoGeneracion" class="grupo-input oculto">
             <label for="generacion" data-i18n="Generación">Generación</label>
-            <input type="number" id="generacion" name="generacion" min="1974" max="2040" data-placeholder="YYYY" placeholder="YYYY">
+            <input type="text" id="generacion" name="generacion" data-placeholder="YYYY, XX, gXX, gYYYY" placeholder="YYYY, XX, gXX, gYYYY">
           </div>
 
           <div id="campoGrupo" class="grupo-input oculto">
@@ -94,11 +94,66 @@
       }
 
       if (grupoSeleccionado.value === 'generacion') {
-        if (!generacion || generacion < 1974 || generacion > 2040) {
-          alert('Ingresa un año de generación válido entre 1974 y 2040.');
+        if (!generacion) {
+          alert('Ingresa un año de generación válido.');
           return;
         }
-        window.open(`selector.html?gen=${encodeURIComponent(generacion)}&email=${encodeURIComponent(email)}`, '_blank');
+        
+        // Parse generation input to handle different formats
+        let parsedGeneration = generacion;
+        const cleanGen = generacion.toLowerCase().replace(/\s/g, '');
+        
+        // Handle formats: 2027, 27, g27, g2027
+        if (cleanGen.startsWith('g')) {
+          // Remove 'g' prefix and validate
+          const yearPart = cleanGen.substring(1);
+          if (yearPart.length === 2) {
+            // g27 format - assume 20xx
+            const fullYear = '20' + yearPart;
+            if (parseInt(fullYear) >= 1974 && parseInt(fullYear) <= 2040) {
+              parsedGeneration = fullYear;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else if (yearPart.length === 4) {
+            // g2027 format
+            if (parseInt(yearPart) >= 1974 && parseInt(yearPart) <= 2040) {
+              parsedGeneration = yearPart;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else {
+            alert('Formato de generación inválido. Usa: YYYY, XX, gXX, o gYYYY');
+            return;
+          }
+        } else {
+          // Handle formats: 2027, 27
+          if (cleanGen.length === 2) {
+            // 27 format - assume 20xx
+            const fullYear = '20' + cleanGen;
+            if (parseInt(fullYear) >= 1974 && parseInt(fullYear) <= 2040) {
+              parsedGeneration = fullYear;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else if (cleanGen.length === 4) {
+            // 2027 format
+            if (parseInt(cleanGen) >= 1974 && parseInt(cleanGen) <= 2040) {
+              parsedGeneration = cleanGen;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else {
+            alert('Formato de generación inválido. Usa: YYYY, XX, gXX, o gYYYY');
+            return;
+          }
+        }
+        
+        window.open(`selector.html?gen=${encodeURIComponent(parsedGeneration)}&email=${encodeURIComponent(email)}`, '_blank');
       } else if (grupoSeleccionado.value === 'especial') {
         if (!grupoEspecial) {
           alert('Selecciona un grupo especial válido.');

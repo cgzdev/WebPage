@@ -27,6 +27,177 @@ header {
   width: calc(100% - 40px); 
   max-width: 700px;
   transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+
+
+.header-controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.header-controls button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.header-controls button:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.header-controls button:first-child {
+  background: rgba(76, 175, 80, 0.85);
+  color: white;
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.header-controls button:first-child:hover {
+  background: rgba(76, 175, 80, 0.95);
+}
+
+.header-controls button:last-child {
+  background: rgba(209, 33, 33, 0.85);
+  color: white;
+  border-color: rgba(209, 33, 33, 0.5);
+}
+
+.header-controls button:last-child:hover {
+  background: rgba(209, 33, 33, 0.95);
+}
+
+.photo-counter {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(33, 150, 243, 0.85);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Floating action buttons */
+.floating-buttons {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.floating-buttons.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.floating-button {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.floating-button:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.floating-button.select-all-btn {
+  background: rgba(76, 175, 80, 0.85);
+  color: white;
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.floating-button.select-all-btn:hover {
+  background: rgba(76, 175, 80, 0.95);
+}
+
+.floating-button.send-btn {
+  background: rgba(209, 33, 33, 0.85);
+  color: white;
+  border-color: rgba(209, 33, 33, 0.5);
+}
+
+.floating-button.send-btn:hover {
+  background: rgba(209, 33, 33, 0.95);
+}
+
+.floating-button.counter-btn {
+  background: rgba(33, 150, 243, 0.85);
+  color: white;
+  border-color: rgba(33, 150, 243, 0.5);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.floating-button.counter-btn:hover {
+  background: rgba(33, 150, 243, 0.95);
+}
+
+.back-button {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-button:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
 
@@ -108,9 +279,11 @@ header button:hover {
 
 /* Imagen seleccionada */
 .foto-label img.seleccionada {
-  transform: scale(0.8);
+  transform: scale(0.5);
   box-shadow: 0 0 14px 6px rgba(128, 119, 119, 0.5);
   border: 2px solid #cfc1c0;
+  filter: brightness(0.7) contrast(1.1) saturate(0.8);
+  background: rgba(128, 128, 128, 0.3);
 }
 
 /* Texto bajo imagen */
@@ -148,11 +321,56 @@ header button:hover {
     margin-top: 5px;
   }
 
-  header button {
-    font-size: 1rem;
-    padding: 12px 18px;
+  .header-controls {
+    flex-direction: column;
+    gap: 10px;
     margin-top: 10px;
+  }
+
+  .header-controls button {
+    font-size: 14px;
+    padding: 8px 16px;
+    margin-top: 5px;
     border-radius: 16px;
+  }
+
+  .photo-counter {
+    position: static;
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .floating-buttons {
+    bottom: 20px;
+    right: 20px;
+    gap: 12px;
+  }
+
+  .floating-button {
+    width: 50px;
+    height: 50px;
+  }
+
+  .floating-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .floating-button.counter-btn {
+    font-size: 16px;
+  }
+
+  .back-button {
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .back-button svg {
+    width: 20px;
+    height: 20px;
   }
 
   .galeria {
