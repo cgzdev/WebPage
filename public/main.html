@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Klassenfotos</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="form-wrapper">
+    <div class="contenedor">
+      <header class="header">
+        <div class="header-title">
+          <img src="/60logosuizo.png" alt="Logo Generaciones CSM" style="max-width: 200px; height: auto; margin-bottom: 10px;">
+        </div>
+      </header>
+
+      <hr class="separador">
+      <h1 data-i18n="Registro y envío de fotos">Registro y envío de fotos</h1>
+
+      <form id="formulario">
+
+        <label for="email" data-i18n="Ingresa tu e-mail:">Ingresa tu e-mail:</label>
+        <input type="email" id="email" name="email" data-placeholder="ejemplo@correo.com" placeholder="ejemplo@correo.com" required>
+
+        <label for="grupo" class="grupo-label" data-i18n="Seleccione un campo:">Seleccione un campo:</label>
+        <div class="grupo-glassbox">
+          <div class="grupo-selector">
+            <input type="radio" name="grupo" id="radioGen" value="generacion" onchange="mostrarCampo()" hidden>
+            <label for="radioGen" class="grupo-tab" data-i18n="Generación">Generación</label>
+
+            <input type="radio" name="grupo" id="radioGrupo" value="especial" onchange="mostrarCampo()" hidden>
+            <label for="radioGrupo" class="grupo-tab" data-i18n="Personal y extraordinarios">Personal y extraordinarios</label>
+          </div>
+
+          <div id="campoGeneracion" class="grupo-input oculto">
+            <label for="generacion" data-i18n="Generación">Generación</label>
+            <input type="text" id="generacion" name="generacion" data-placeholder="YYYY, XX, gXX, gYYYY, genXX, genYYYY" placeholder="YYYY, XX, gXX, gYYYY, genXX, genYYYY">
+          </div>
+
+          <div id="campoGrupo" class="grupo-input oculto">
+            <select id="grupoSelect" name="grupoEspecial">
+              <option value="" disabled selected data-i18n="Elige una opción">Elige una opción</option>
+              <option value="maestros" data-i18n="Maestros">Maestros</option>
+              <option value="administracion" data-i18n="Administración">Administración</option>
+              <option value="mantenimiento" data-i18n="Mantenimiento">Mantenimiento</option>
+              <option value="extraescolares" data-i18n="Grupos extraescolares">Grupos extraescolares</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="verBtn" data-i18n="Ver">Ver</button>
+      </form>
+    </div>
+  </div>
+
+  <canvas id="swisscross"></canvas>
+  <script src="main.js"></script>
+  <script src="traduccion.js"></script>
+  <script>
+    // Get user data from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const userData = {
+      nombre: urlParams.get('nombre') || '',
+      grupo: urlParams.get('grupo') || '',
+      generacion: urlParams.get('generacion') || '',
+      idioma: urlParams.get('idioma') || 'es',
+      correo: urlParams.get('email') || ''
+    };
+
+    // Apply language on page load
+    if (userData.idioma) {
+      aplicarTraduccion(userData.idioma);
+    }
+
+    function mostrarCampo() {
+      const seleccion = document.querySelector('input[name="grupo"]:checked');
+      const campoGen = document.getElementById('campoGeneracion');
+      const campoGrupo = document.getElementById('campoGrupo');
+
+      campoGen.classList.toggle('show', seleccion && seleccion.value === 'generacion');
+      campoGen.classList.toggle('oculto', !(seleccion && seleccion.value === 'generacion'));
+
+      campoGrupo.classList.toggle('show', seleccion && seleccion.value === 'especial');
+      campoGrupo.classList.toggle('oculto', !(seleccion && seleccion.value === 'especial'));
+    }
+
+    document.getElementById('formulario').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const grupoSeleccionado = document.querySelector('input[name="grupo"]:checked');
+      const generacion = document.getElementById('generacion').value.trim();
+      const grupoEspecial = document.getElementById('grupoSelect').value;
+
+      if (!email || !grupoSeleccionado) {
+        alert('Por favor completa todos los campos obligatorios.');
+        return;
+      }
+
+    // Save user data with email to markdown now (second screen)
+    try {
+      fetch('/api/save-user-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: userData.nombre,
+          grupo: userData.grupo || (grupoSeleccionado.value === 'generacion' ? 'alumno' : 'personal'),
+          correo: email
+        })
+      });
+    } catch (e) {
+      console.error('No se pudo guardar el usuario en markdown:', e);
+    }
+
+    if (grupoSeleccionado.value === 'generacion') {
+        if (!generacion) {
+          alert('Ingresa un año de generación válido.');
+          return;
+        }
+        
+        // Parse generation input to handle different formats
+        let parsedGeneration = generacion;
+        const cleanGen = generacion.toLowerCase().replace(/\s/g, '');
+        
+        // Handle formats: 2027, 27, g27, g2027, gen27, gen2027
+        if (cleanGen.startsWith('gen')) {
+          // Remove 'gen' prefix and validate
+          const yearPart = cleanGen.substring(3);
+          if (yearPart.length === 2) {
+            // gen27 format - assume 20xx
+            const fullYear = '20' + yearPart;
+            if (parseInt(fullYear) >= 1974 && parseInt(fullYear) <= 2040) {
+              parsedGeneration = fullYear;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else if (yearPart.length === 4) {
+            // gen2027 format
+            if (parseInt(yearPart) >= 1974 && parseInt(yearPart) <= 2040) {
+              parsedGeneration = yearPart;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else {
+            alert('Formato de generación inválido. Usa: YYYY, XX, gXX, gYYYY, genXX, o genYYYY');
+            return;
+          }
+        } else if (cleanGen.startsWith('g')) {
+          // Remove 'g' prefix and validate
+          const yearPart = cleanGen.substring(1);
+          if (yearPart.length === 2) {
+            // g27 format - assume 20xx
+            const fullYear = '20' + yearPart;
+            if (parseInt(fullYear) >= 1974 && parseInt(fullYear) <= 2040) {
+              parsedGeneration = fullYear;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else if (yearPart.length === 4) {
+            // g2027 format
+            if (parseInt(yearPart) >= 1974 && parseInt(yearPart) <= 2040) {
+              parsedGeneration = yearPart;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else {
+            alert('Formato de generación inválido. Usa: YYYY, XX, gXX, gYYYY, genXX, o genYYYY');
+            return;
+          }
+        } else {
+          // Handle formats: 2027, 27
+          if (cleanGen.length === 2) {
+            // 27 format - assume 20xx
+            const fullYear = '20' + cleanGen;
+            if (parseInt(fullYear) >= 1974 && parseInt(fullYear) <= 2040) {
+              parsedGeneration = fullYear;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else if (cleanGen.length === 4) {
+            // 2027 format
+            if (parseInt(cleanGen) >= 1974 && parseInt(cleanGen) <= 2040) {
+              parsedGeneration = cleanGen;
+            } else {
+              alert('Ingresa un año de generación válido entre 1974 y 2040.');
+              return;
+            }
+          } else {
+            alert('Formato de generación inválido. Usa: YYYY, XX, gXX, gYYYY, genXX, o genYYYY');
+            return;
+          }
+        }
+        
+        window.open(`selector.html?gen=${encodeURIComponent(parsedGeneration)}&email=${encodeURIComponent(email)}&nombre=${encodeURIComponent(userData.nombre)}&grupo=${encodeURIComponent(userData.grupo)}&idioma=${encodeURIComponent(userData.idioma)}`, '_blank');
+      } else if (grupoSeleccionado.value === 'especial') {
+        if (!grupoEspecial) {
+          alert('Selecciona un grupo especial válido.');
+          return;
+        }
+        window.open(`selector.html?gen=${encodeURIComponent(grupoEspecial)}&email=${encodeURIComponent(email)}&nombre=${encodeURIComponent(userData.nombre)}&grupo=${encodeURIComponent(userData.grupo)}&idioma=${encodeURIComponent(userData.idioma)}`, '_blank');
+      }
+    });
+  </script>
+</body>
+</html>

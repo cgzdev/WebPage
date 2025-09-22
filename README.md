@@ -256,6 +256,36 @@ node server.js
 
 ---
 
+## SSL con Nginx y Let's Encrypt
+
+Este proyecto incluye configuración de Nginx como proxy inverso para el servidor Node (puerto 3000) y scripts para instalar Certbot y habilitar SSL automático.
+
+### Archivos
+- `deploy/nginx-webpage.conf`: sitio Nginx para `pinakothek60aniv.csm.edu.mx`.
+- `deploy/setup-ssl.sh`: instala Nginx/Certbot, configura el sitio y obtiene el certificado.
+- `deploy/renew-ssl.sh`: renueva certificados y recarga Nginx.
+
+### Pasos (en el servidor)
+1. Apunta el DNS del dominio a este servidor (registro A/AAAA).
+2. Asegúrate de que el servidor Node escuche en `127.0.0.1:3000` y esté activo (PM2 recomendado).
+3. Ejecuta como root:
+
+```bash
+bash /root/WebPage/deploy/setup-ssl.sh
+```
+
+Esto instalará Nginx y Certbot, configurará el sitio, obtendrá el certificado y activará la renovación automática.
+
+### Renovación manual (opcional)
+
+```bash
+bash /root/WebPage/deploy/renew-ssl.sh
+```
+
+Certbot ya programa renovaciones automáticas; el script recarga Nginx tras renovar.
+
+---
+
 ## Preguntas Frecuentes y Troubleshooting
 
 - **No se ven las imágenes:**  

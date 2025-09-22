@@ -11,6 +11,7 @@
   <header>
     <h1 id="titulo-generacion">Generación 202X</h1>
     <h2>Seleccione las fotos que desea</h2>
+    <div class="developer-credit">Desarrollado por: Arturo Robles, Carlos Galindo, Federico Aguilar & Yan Álvarez</div>
     <div class="header-controls">
       <button onclick="seleccionarTodas()">Seleccionar todas</button>
       <button onclick="enviarSeleccion()">Enviar</button>
@@ -48,6 +49,9 @@
   const params = new URLSearchParams(window.location.search);
   const email = params.get("email");
   const generacion = params.get("gen");
+  const nombre = params.get("nombre");
+  const grupo = params.get("grupo");
+  const idioma = params.get("idioma") || 'es';
   const ascii = email?.split("@")[0].split("").map(c => c.charCodeAt(0)).join("");
 
   if (!generacion) {
@@ -201,7 +205,10 @@
         body: JSON.stringify({
           correo: email,
           ascii,
-          imagenes: stringSeleccion
+          imagenes: stringSeleccion,
+          idioma: idioma,
+          nombre: nombre,
+          grupo: grupo
         })
       });
 

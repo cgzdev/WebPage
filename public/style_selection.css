@@ -216,6 +216,14 @@ header h2 {
   font-size: 1.2rem;
 }
 
+.developer-credit {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 8px;
+  font-weight: 300;
+  text-align: center;
+}
+
 header button {
   margin-top: 15px;
   padding: 10px 20px;

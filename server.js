@@ -36,6 +36,9 @@ app.use(fotosDev);
 const paqueteRouter = require('./routes/paquete');
 app.use(paqueteRouter);
 
+const userDataRouter = require('./routes/user-data');
+app.use(userDataRouter);
+
 // Función para determinar carpeta según nombre
 function obtenerCarpeta(nombre) {
   if (nombre.toLowerCase().includes('maestros')) return 'maestros';
@@ -104,6 +107,6 @@ app.get('/:ascii', (req, res) => {
 });
 
 // Inicio del servidor
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor accesible en http://pinakothek60aniv.csm.edu.mx/`);
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`Servidor Node escuchando en http://127.0.0.1:${PORT} (detrás de Nginx)`);
 });

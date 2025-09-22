@@ -17,13 +17,33 @@ if (fs.existsSync(dbPath)) {
   selecciones = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 }
 
+// Email templates for different languages
+const emailTemplates = {
+  es: {
+    subject: 'Tu selección de fotos - Pinakothek60',
+    text: `Durante seis décadas, hemos formado generaciones con espíritu crítico y pasión por el conocimiento.\nGracias por estar aquí, por revivir recuerdos, compartir sonrisas y, sobre todo, por impulsar juntos el próximo capítulo de nuestra historia.\n\nSu seleccion de fotos:\n{link}\n\n-Colegio Suizo de México \n Desarrollado por: Arturo Robles, Carlos Galindo, Federico Aguilar, Yan Alvarez`
+  },
+  en: {
+    subject: 'Your photo selection - Pinakothek60',
+    text: `For six decades, we have formed generations with critical spirit and passion for knowledge.\nThank you for being here, for reliving memories, sharing smiles and, above all, for driving together the next chapter of our history.\n\nYour photo selection:\n{link}\n\n-Swiss School of Mexico \n Developed by: Arturo Robles, Carlos Galindo, Federico Aguilar, Yan Alvarez`
+  },
+  de: {
+    subject: 'Ihre Fotoauswahl - Pinakothek60',
+    text: `Sechs Jahrzehnte lang haben wir Generationen mit kritischem Geist und Leidenschaft für Wissen geformt.\nDanke, dass Sie hier sind, um Erinnerungen zu beleben, Lächeln zu teilen und vor allem, um gemeinsam das nächste Kapitel unserer Geschichte voranzutreiben.\n\nIhre Fotoauswahl:\n{link}\n\n-Schweizer Schule Mexiko \n Entwickelt von: Arturo Robles, Carlos Galindo, Federico Aguilar, Yan Alvarez`
+  },
+  fr: {
+    subject: 'Votre sélection de photos - Pinakothek60',
+    text: `Pendant six décennies, nous avons formé des générations avec un esprit critique et une passion pour la connaissance.\nMerci d'être ici, de revivre les souvenirs, de partager les sourires et, surtout, de propulser ensemble le prochain chapitre de notre histoire.\n\nVotre sélection de photos:\n{link}\n\n-École Suisse du Mexique \n Développé par: Arturo Robles, Carlos Galindo, Federico Aguilar, Yan Alvarez`
+  }
+};
+
 // Endpoint principal
 router.post('/api/paquete', async (req, res) => {
   // 🔍 LOG para depurar
   console.log('POST /api/paquete body:', req.body);
   console.log(`[SELECCION GUARDADA] ascii: ${req.body.ascii}, email: ${req.body.correo}, imagenes: ${req.body.imagenes}`);
 
-  const { correo, ascii, imagenes } = req.body;
+  const { correo, ascii, imagenes, idioma = 'es', nombre, grupo } = req.body;
 
   // Validación mejorada
   console.log("BODY recibido:", req.body);
@@ -62,11 +82,15 @@ router.post('/api/paquete', async (req, res) => {
       }
     });
 
+    // Get email template based on language
+    const template = emailTemplates[idioma] || emailTemplates['es'];
+    const emailText = template.text.replace('{link}', link);
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER || 'pinakothek60aniv@gmail.com',
       to: correo,
-      subject: 'Tu selección de fotos - Pinakothek60',
-      text: `Durante seis décadas, hemos formado generaciones con espíritu crítico y pasión por el conocimiento.\nGracias por estar aquí, por revivir recuerdos, compartir sonrisas y, sobre todo, por impulsar juntos el próximo capítulo de nuestra historia.\n\nSu seleccion de fotos:\n${link}\n\n-Colegio Suizo de México \n Desarrollado por: Arturo Robles, Carlos Galindo, Federico Aguilar, Yan Alvarez`
+      subject: template.subject,
+      text: emailText
     });
 
     res.json({ success: true, link });

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Usuarios Registrados - Klassenfotos</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #e0e0e0, #ffffff);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #E32236;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .refresh-btn {
+            background: #E32236;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .refresh-btn:hover {
+            background: #c41e3a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Usuarios Registrados - Klassenfotos</h1>
+        <button class="refresh-btn" onclick="loadUserData()">🔄 Actualizar</button>
+        <div id="userData" class="loading">Cargando datos...</div>
+    </div>
+
+    <script>
+        function loadUserData() {
+            document.getElementById('userData').innerHTML = '<div class="loading">Cargando datos...</div>';
+            
+            fetch('/api/user-data')
+                .then(response => response.text())
+                .then(data => {
+                    // Convert markdown table to HTML
+                    const lines = data.split('\n');
+                    let html = '<table><thead><tr>';
+                    
+                    // Find the header row
+                    for (let line of lines) {
+                        if (line.includes('|') && line.includes('Nombre')) {
+                            const headers = line.split('|').map(h => h.trim()).filter(h => h);
+                            headers.forEach(header => {
+                                html += `<th>${header}</th>`;
+                            });
+                            html += '</tr></thead><tbody>';
+                            break;
+                        }
+                    }
+                    
+                    // Find data rows
+                    let dataStarted = false;
+                    for (let line of lines) {
+                        if (line.includes('|') && line.includes('---')) {
+                            dataStarted = true;
+                            continue;
+                        }
+                        if (dataStarted && line.includes('|') && !line.includes('---')) {
+                            const cells = line.split('|').map(c => c.trim()).filter(c => c);
+                            if (cells.length >= 3) {
+                                html += '<tr>';
+                                cells.forEach(cell => {
+                                    html += `<td>${cell}</td>`;
+                                });
+                                html += '</tr>';
+                            }
+                        }
+                    }
+                    
+                    html += '</tbody></table>';
+                    document.getElementById('userData').innerHTML = html;
+                })
+                .catch(error => {
+                    document.getElementById('userData').innerHTML = '<div style="color: red;">Error al cargar los datos: ' + error.message + '</div>';
+                });
+        }
+
+        // Load data on page load
+        loadUserData();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(loadUserData, 5000);
+    </script>
+</body>
+</html>

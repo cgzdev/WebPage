@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Klassenfotos - Inicio</title>
+  <title>Pinakothek - Inicio</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@
       </header>
 
       <hr class="separador">
-      <h1 data-i18n="Bienvenido a Klassenfotos">Bienvenido a Klassenfotos</h1>
+      <h1 data-i18n="Bienvenido a Pinakothek">Bienvenido a Pinakothek</h1>
 
       <form id="formulario">
         <div style="text-align: center; margin-bottom: 15px;">
@@ -31,7 +31,7 @@
         </div>
 
         <label for="nombre" data-i18n="Nombre completo:">Nombre completo:</label>
-        <input type="text" id="nombre" name="nombre" data-placeholder="Nombre(s), Apellido" placeholder="Nombre(s), Apellido" required>
+        <input type="text" id="nombre" name="nombre" data-placeholder="ejemplo@correo.com" placeholder="Juan Pérez" required>
 
         <label for="grupo" class="grupo-label" data-i18n="Seleccione su categoría:">Seleccione su categoría:</label>
         <div class="grupo-glassbox">
@@ -63,8 +63,7 @@
       nombre: '',
       grupo: '',
       generacion: '',
-      idioma: 'es',
-      correo: ''
+      idioma: 'es'
     };
 
     function mostrarCampoGeneracion() {
@@ -104,7 +103,7 @@
     document.getElementById('grupoSelect').addEventListener('change', checkFormCompletion);
     document.getElementById('generacion').addEventListener('input', checkFormCompletion);
 
-    document.getElementById('formulario').addEventListener('submit', async function(event) {
+    document.getElementById('formulario').addEventListener('submit', function(event) {
       event.preventDefault();
 
       const nombre = document.getElementById('nombre').value.trim();
@@ -127,13 +126,11 @@
         nombre: nombre,
         grupo: grupo,
         generacion: generacion,
-        idioma: idioma,
-        correo: ''
+        idioma: idioma
       };
 
-      console.log('Form submitted with user data:', userData);
-
-      // Do not save here; email is entered on next screen
+      // Save user data to markdown file
+      saveUserData();
 
       // Parse generation if needed
       let parsedGeneration = generacion;
@@ -214,38 +211,11 @@
         idioma: idioma
       });
       
-      window.location.href = `main.html?${params.toString()}`;
+      window.location.href = `index.html?${params.toString()}`;
     });
 
-    async function saveUserData() {
-      // Create markdown table entry
-      const timestamp = new Date().toISOString();
-      const tableRow = `| ${userData.nombre} | ${userData.grupo} | ${userData.correo || '-'} | ${timestamp} |\n`;
-      
-      console.log('Saving user data:', userData);
-      
-      try {
-        // Send data to server to save in markdown file
-        const response = await fetch('/api/save-user-data', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            nombre: userData.nombre,
-            grupo: userData.grupo,
-            correo: userData.correo,
-            timestamp: timestamp
-          })
-        });
-        
-        const data = await response.json();
-        console.log('User data saved successfully:', data);
-        return data;
-      } catch (err) {
-        console.error('Error saving user data:', err);
-        throw err;
-      }
+    function saveUserData() {
+      // No guardar en esta pantalla; el email se captura en la siguiente
     }
 
     // Initialize form validation

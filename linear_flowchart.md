@@ -53,7 +53,7 @@ START
 ### **Phase 1: Entry & Input (Top)**
 1. **Email Input** → User enters email address
 2. **Field Selection** → Choose generation or group type
-3. **Input Validation** → System validates and parses input
+3. **Input Validation** → System validates and parses input (supports: 2027, 27, g27, g2027, gen27, gen2027)
 
 ### **Phase 2: Page Transition (Upper Middle)**
 4. **Header Display** → Shows generation/group title
