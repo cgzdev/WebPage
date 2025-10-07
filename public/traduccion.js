@@ -22,6 +22,9 @@ const traducciones = {
     'ejemplo@correo.com': 'ejemplo@correo.com',
     'Nombre(s), Apellido': 'Nombre(s), Apellido',
     'YYYY': 'YYYY',
+    'Aviso legal': 'Aviso legal',
+    'terms-text': 'Las fotografías disponibles en este sitio corresponden a actividades escolares y únicamente muestran imágenes grupales. El acceso a dichas fotografías es exclusivo para fines de memoria institucional y no podrán ser utilizadas para otros propósitos sin la autorización expresa del Colegio Suizo de México, A.C. Queda estrictamente prohibida su reproducción, distribución o uso no autorizado.',
+    'Continuar a galería': 'Continuar a galería',
   },
   en: {
     'Bienvenido a Klassenfotos': 'Welcome to Klassenfotos',
@@ -46,6 +49,9 @@ const traducciones = {
     'ejemplo@correo.com': 'example@email.com',
     'Nombre(s), Apellido': 'First Name(s), Last Name',
     'YYYY': 'YYYY',
+    'Aviso legal': 'Legal Notice',
+    'terms-text': 'The photographs available on this site correspond to school activities and only show group images. Access to these photographs is exclusive for institutional memory purposes and may not be used for other purposes without the express authorization of the Swiss School of Mexico, A.C. Reproduction, distribution or unauthorized use is strictly prohibited.',
+    'Continuar a galería': 'Continue to gallery',
   },
   de: {
     'Bienvenido a Klassenfotos': 'Willkommen bei Klassenfotos',
@@ -70,6 +76,9 @@ const traducciones = {
     'ejemplo@correo.com': 'beispiel@email.de',
     'Nombre(s), Apellido': 'Vorname(n), Nachname',
     'YYYY': 'JJJJ',
+    'Aviso legal': 'Rechtlicher Hinweis',
+    'terms-text': 'Die auf dieser Website verfügbaren Fotografien entsprechen schulischen Aktivitäten und zeigen ausschließlich Gruppengruppen. Der Zugang zu diesen Fotografien ist ausschließlich für institutionelle Erinnerungszwecke bestimmt und darf nicht für andere Zwecke ohne ausdrückliche Genehmigung der Schweizer Schule Mexiko, A.C. verwendet werden. Die Reproduktion, Verbreitung oder unbefugte Verwendung ist strengstens untersagt.',
+    'Continuar a galería': 'Zur Galerie',
   },
   fr: {
     'Bienvenido a Klassenfotos': 'Bienvenue à Klassenfotos',
@@ -94,6 +103,9 @@ const traducciones = {
     'ejemplo@correo.com': 'exemple@email.com',
     'Nombre(s), Apellido': 'Prénom(s), Nom de famille',
     'YYYY': 'AAAA',
+    'Aviso legal': 'Avis légal',
+    'terms-text': 'Les photographies disponibles sur ce site correspondent à des activités scolaires et ne montrent que des images de groupe. L\'accès à ces photographies est exclusivement destiné à des fins de mémoire institutionnelle et ne peut être utilisé à d\'autres fins sans l\'autorisation expresse de l\'École Suisse du Mexique, A.C. La reproduction, distribution ou utilisation non autorisée est strictement interdite.',
+    'Continuar a galería': 'Continuer vers la galerie',
   }
 };
 
