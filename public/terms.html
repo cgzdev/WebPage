@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Términos y Condiciones - Klassenfotos</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="form-wrapper">
+    <div class="contenedor">
+      <header class="header">
+        <div class="header-title">
+          <img src="/60logosuizo.png" alt="Logo Generaciones CSM" style="max-width: 200px; height: auto; margin-bottom: 10px;">
+        </div>
+      </header>
+
+      <hr class="separador">
+      <h1 data-i18n="Términos y Condiciones">Términos y Condiciones</h1>
+
+      <div class="terms-container">
+        <div class="terms-content">
+          <p class="terms-text">
+            Las fotografías disponibles en este sitio corresponden a actividades escolares y únicamente muestran imágenes grupales. 
+            El acceso a dichas fotografías es exclusivo para fines de memoria institucional y no podrán ser utilizadas para otros propósitos 
+            sin la autorización expresa del Colegio Suizo de México, A.C. Queda estrictamente prohibida su reproducción, distribución o uso no autorizado.
+          </p>
+        </div>
+
+        <div class="terms-actions">
+          <button type="button" id="continuarBtn" class="continue-btn" onclick="continuarAGaleria()">
+            Continuar a galería
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="swisscross"></canvas>
+  <script src="main.js"></script>
+  <script src="traduccion.js"></script>
+  <script>
+    // Get user data from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const userData = {
+      email: urlParams.get('email') || '',
+      generacion: urlParams.get('generacion') || '',
+      nombre: urlParams.get('nombre') || '',
+      grupo: urlParams.get('grupo') || '',
+      idioma: urlParams.get('idioma') || 'es'
+    };
+
+    // Apply language on page load
+    if (userData.idioma) {
+      aplicarTraduccion(userData.idioma);
+    }
+
+    function continuarAGaleria() {
+      // Redirect to photo selector with all user data
+      const params = new URLSearchParams({
+        gen: userData.generacion,
+        email: userData.email,
+        nombre: userData.nombre,
+        grupo: userData.grupo,
+        idioma: userData.idioma
+      });
+      
+      window.location.href = `selector.html?${params.toString()}`;
+    }
+
+    // Check if required parameters are present
+    if (!userData.email || !userData.generacion) {
+      alert('Error: Faltan parámetros requeridos. Por favor regresa al inicio.');
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>

@@ -199,13 +199,13 @@
           }
         }
         
-        window.open(`selector.html?gen=${encodeURIComponent(parsedGeneration)}&email=${encodeURIComponent(email)}&nombre=${encodeURIComponent(userData.nombre)}&grupo=${encodeURIComponent(userData.grupo)}&idioma=${encodeURIComponent(userData.idioma)}`, '_blank');
+        window.location.href = `terms.html?generacion=${encodeURIComponent(parsedGeneration)}&email=${encodeURIComponent(email)}&nombre=${encodeURIComponent(userData.nombre)}&grupo=${encodeURIComponent(userData.grupo)}&idioma=${encodeURIComponent(userData.idioma)}`;
       } else if (grupoSeleccionado.value === 'especial') {
         if (!grupoEspecial) {
           alert('Selecciona un grupo especial válido.');
           return;
         }
-        window.open(`selector.html?gen=${encodeURIComponent(grupoEspecial)}&email=${encodeURIComponent(email)}&nombre=${encodeURIComponent(userData.nombre)}&grupo=${encodeURIComponent(userData.grupo)}&idioma=${encodeURIComponent(userData.idioma)}`, '_blank');
+        window.location.href = `terms.html?generacion=${encodeURIComponent(grupoEspecial)}&email=${encodeURIComponent(email)}&nombre=${encodeURIComponent(userData.nombre)}&grupo=${encodeURIComponent(userData.grupo)}&idioma=${encodeURIComponent(userData.idioma)}`;
       }
     });
   </script>

@@ -283,3 +283,108 @@ input[type="radio"]:checked + .grupo-tab {
   font-size: 16px;
   display: block;
 }
+
+/* Terms and Conditions Styles */
+.terms-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.terms-content {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px) saturate(160%);
+  -webkit-backdrop-filter: blur(25px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.terms-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  text-align: justify;
+  margin: 0;
+  word-spacing: 0.1em;
+  letter-spacing: 0.02em;
+}
+
+.terms-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.continue-btn {
+  background: rgba(209, 33, 33, 0.85);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(180, 20, 20, 0.4);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.continue-btn:hover {
+  background: rgba(220, 40, 40, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(180, 20, 20, 0.5);
+}
+
+.continue-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(180, 20, 20, 0.4);
+}
+
+/* Responsive adjustments for terms page */
+@media (max-width: 600px) {
+  .terms-content {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .terms-text {
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: left;
+  }
+
+  .continue-btn {
+    padding: 12px 25px;
+    font-size: 15px;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .contenedor {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .terms-content {
+    padding: 15px;
+  }
+
+  .continue-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
